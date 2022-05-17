@@ -34,11 +34,11 @@ if(npmPkg === null) {
     'pg': '8.0.3',
   };
   // platform dependent pg-server-xxx package
-  if(npmPkg == "darwin_arm64"){
+  // if(npmPkg == "darwin_arm64"){
     depend[npmPkg] = 'https://github.com/bslocombe/pg-server-14.2-osx-arm64.git#master';
-  }else{
-    depend[npmPkg] = '9.4.4'
-  }
+  // }else{
+  //   depend[npmPkg] = '9.4.4'
+  // }
 
   Package.registerBuildPlugin({
     name: 'pgServer',
@@ -57,8 +57,8 @@ Package.onUse(function(api) {
 Package.onTest(function(api) {
   api.use('tinytest');
   api.use('bslocombe:pg-server');
-  api.use('bslocombe:pg@0.0.4');
+  api.use('bslocombe:pg@1.0.4');
 
-  api.addFiles('test.pg.json', 'server');
+  api.addAssets('test.pg.json', 'server');
   api.addFiles('pg-server-tests.js', 'server');
 });

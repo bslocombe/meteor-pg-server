@@ -122,27 +122,7 @@ Plugin.registerSourceHandler('pg.json', {
         serverReady = true;
         // Extra spaces for covering Meteor's status messages
         console.log('=> Started PostgreSQL.                        ');
-
-        if(initializeServer && initQueries) {
-          // Perform initialization queries on new server installation
-          var connectionStr = 'postgres://'
-            + process.env.USER + ':' // Default user is same as system user
-            + 'numtel'               // From defaultpw file in NPM package
-            + '@localhost:' + (settings.port || 5432)
-            + '/postgres';           // Default database
-
-          pg.connect(connectionStr, MBE(function(error, client, pgDone) {
-            if(error) return fut['throw'](error);
-            console.log('[Postgres] Performing initialization queries...  ');
-            client.query(initQueries, MBE(function(error, result) {
-              pgDone();
-              if(error) return fut['throw'](error);
-              return fut['return']();
-            }));
-          }));
-        } else {
-          fut['return']();
-        }
+        fut['return']();
       }
     }));
 
