@@ -62,21 +62,9 @@ Plugin.registerSourceHandler('pg.json', {
   var settings =
     loadJSONContent(compileStep, compileStep.read().toString('utf8'));
 
-  if(settings.initialize) {
-    var initQueries =
-      fs.readFileSync(path.join(process.cwd(), settings.initialize)).toString();
-    delete settings.initialize;
-  }
-
   // Paths inside the application directory where database is to be stored
   var dataDir = settings.datadir || '.meteor/local/postgresdb';
   var dataDirPath = path.join(process.cwd(), dataDir);
-
-  if('output_stderr' in settings) {
-    // Allow debug flag in *.pg.json configuration file
-    outputStdErr = !! settings['output_stderr'];
-    delete settings['output_stderr'];
-  }
 
   if('datadir' in settings) {
     // dataDir is specified as the first argument to startServer
@@ -182,6 +170,7 @@ function determinePlatformNpmPackage() {
     case 'linux_x64': return 'pg-server-9.4-linux-x64';
     case 'linux_ia32': return 'pg-server-9.4-linux-i386';
     case 'darwin_x64': return 'pg-server-9.4-osx-x64';
+    case 'darwin_arm64': return 'pg-server-14.2-osx-arm64';
     default: return null;
   }
 }

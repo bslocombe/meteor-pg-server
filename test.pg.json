@@ -1,6 +1,3 @@
 {
-  "port": 5439,
-  "datadir": "testdb",
-  "output_stderr": true,
-  "initialize": "test.init.sql"
+  "port": 12345
 }
