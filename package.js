@@ -1,5 +1,5 @@
 Package.describe({
-  name: 'meteor-pg-server',
+  name: 'bslocombe:pg-server',
   version: '1.0.2',
   summary: 'Run PostgreSQL server inside your Meteor app',
   git: 'https://github.com/bslocombe/meteor-pg-server.git',
