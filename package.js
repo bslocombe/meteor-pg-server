@@ -1,7 +1,7 @@
 Package.describe({
   name: 'bslocombe:pg-server',
   // debugOnly: true,
-  version: '1.0.2',
+  version: '1.0.4',
   summary: 'Run PostgreSQL server inside your Meteor app',
   git: 'https://github.com/bslocombe/meteor-pg-server.git',
   documentation: 'README.md'
@@ -9,10 +9,10 @@ Package.describe({
 
 function determinePlatformNpmPackage() {
   switch(process.platform + '_' + process.arch) {
-    case 'linux_x64': return 'pg-server-9.4-linux-x64';
-    case 'linux_ia32': return 'pg-server-9.4-linux-i386';
-    case 'darwin_x64': return 'pg-server-9.4-osx-x64';
-    case 'darwin_arm64': return 'pg-server-14.2-osx-arm64';
+    // case 'linux_x64': return 'pg-server-9.4-linux-x64';
+    // case 'linux_ia32': return 'pg-server-9.4-linux-i386';
+    case 'darwin_x64': return true;
+    case 'darwin_arm64': return true;
     default: return null;
   }
 }
@@ -30,12 +30,13 @@ var npmPkg = determinePlatformNpmPackage();
 
 if(npmPkg === null) {
   console.error('ERROR: Platform is not supported by slocombe:pg-server!');
-  console.error('       Supports only Linux (32 and 64 bit) and OSX (64 bit, arm64)');
+  console.error('       Supports only and OSX (64 bit, arm64)');
 } else {
   var depend = {
     // For initialization queries
     'pg': '8.0.3',
   };
+  // removing binary dependencies
   // platform dependent pg-server-xxx package
   // if(npmPkg == "darwin_arm64"){
     // depend[npmPkg] = 'https://github.com/bslocombe/pg-server-14.2-osx-arm64.git#master';

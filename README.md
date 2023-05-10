@@ -1,6 +1,11 @@
 # numtel:pg-server [![Build Status](https://travis-ci.org/numtel/meteor-pg-server.svg?branch=master)](https://travis-ci.org/numtel/meteor-pg-server)
 
 Package to run PostgreSQL server inside your Meteor app
+Credits of this package go to numtel, i have just tweaked for my own projects. 
+
+**This only works on OSX at the moment with brew** This new version uses the system libraries for postgres binaries. pulling these in via brew for you if they are not installed. 
+
+> **Version 1.0.3 breaking change:** You must have a *.pg.json somewhere in your project or the postgres server only runs the first time you add the build plugin. This was not obvious to me so adding this here. I have removed the test.pg.json as this forced the build to run when installing which can result in a broken pgdir for some cases. I have also refactored to not need the binary npm depends, since getting these updated was proving to be too much work. Instead we are simply using binary version available on your PATH. This also calls brew install for the correct binarys (initdb and postgres)
 
 > **Version 1.0.0 breaking change:** Default data directory has now changed. If you do not specify a data directory in your `.pg.json` file, you will need to now specify the old default data directory in order to migrate successfully without losing your current databases (or move your data directory to the new default location, see "Configuring the server" section below). Set the `datadir` key to `.meteor/postgresdb` to maintain the old default data directory.
 
@@ -30,7 +35,12 @@ In your `.pg.json` file, you may specify a filename containing queries to perfor
 
 #### Example configuration
 
-See [`test.pg.json`](test.pg.json) for an example. Settings are used to build the `postgres.conf` file. Specifying a port is recommended.
+Create a pg.json file in the root, with something lik this as the contents:
+```
+{
+  port: 12345
+}
+```
 
 ## Usage
 
@@ -40,7 +50,7 @@ With the start of you Meteor application, you will notice a new line output to t
 => Started PostgreSQL.
 ```
 
-The PostgreSQL server is started on the local machine and may be used with the `numtel:pg` package by using the following connection string:
+The PostgreSQL server is started on the local machine and may be used with the `bslocombe:pg` package by using the following connection string:
 
 ```javascript
 var CONN_STR = 'postgres://'
