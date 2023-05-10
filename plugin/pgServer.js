@@ -19,6 +19,12 @@ var path = Npm.require('path');
 var fs = Npm.require('fs');
 var Future = Npm.require('fibers/future');
 var pg = Npm.require('pg');
+var spawnSync = Npm.require('spawn-sync');
+var spawn = Npm.require('child_process').spawn;
+var extend = Npm.require('extend');
+var defaultConfig = {
+  port: 5432
+}
 
 var postgres;
 var outputStdErr = false;
@@ -53,7 +59,46 @@ var npmPkg = determinePlatformNpmPackage();
 if(npmPkg === null) return;
 
 // Load pg-server-xxx NPM package
-var startServer = Npm.require(npmPkg);
+var startServer = function(dataDir, config) {
+  var fullConfig = extend(defaultConfig, config || {});
+
+  try {
+    var dataDirStat = fs.statSync(dataDir);
+  } catch(err) {
+    // Data directory does not exist
+    var initResult1 = spawnSync('brew', ['install postgresql@14'])
+    var initResult = spawnSync(
+      // path.join(__dirname, 'server/bin/initdb'),
+      'initdb',
+      [ '-D', dataDir, '--username=postgres' ]);
+      if (initResult.status !== 0) {
+        process.stderr.write(initResult.stderr);
+        process.exit(initResult.status);
+      }
+  }
+
+  if(dataDirStat && !dataDirStat.isDirectory()) {
+    throw new Error('DATA_DIRECTORY_UNAVAILABLE');
+  }
+
+  // Generate postgresql.conf from provided configuration
+  var conf = Object.keys(fullConfig).map(function(key) {
+      if(fullConfig[key] === null) {
+        return ''
+      } else {
+        return key + ' = ' + fullConfig[key]
+      }
+    }).join('\n');
+  
+  fs.writeFileSync(path.join(dataDir, 'postgresql.conf'), conf);
+
+  var child = spawn(
+    'postgres', [ '-D', dataDir ]);
+  
+  return child
+}
+
+// var startServer = Npm.require(npmPkg);
 
 // Read settings from somefile.pg.json
 Plugin.registerSourceHandler('pg.json', {
@@ -80,10 +125,11 @@ Plugin.registerSourceHandler('pg.json', {
   }
 
   // Start server, but only once, wait for it to be ready (or not)
+  console.log(postgres)
+
   if(!postgres) {
     var fut = new Future;
     postgres = startServer(dataDirPath, settings);
-
     // After preset timeout, give up waiting for MySQL to start or fail
     setTimeout(MBE(function() {
       if(!fut.isResolved()) {
@@ -127,6 +173,8 @@ Plugin.registerSourceHandler('pg.json', {
     }));
 
     return fut.wait();
+  }else{
+    console.log('Postgres already running on:')
   }
 
 });

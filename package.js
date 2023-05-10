@@ -1,5 +1,6 @@
 Package.describe({
   name: 'bslocombe:pg-server',
+  // debugOnly: true,
   version: '1.0.2',
   summary: 'Run PostgreSQL server inside your Meteor app',
   git: 'https://github.com/bslocombe/meteor-pg-server.git',
@@ -18,9 +19,11 @@ function determinePlatformNpmPackage() {
 
 // Force Meteor to recognize that this package has binary deps
 // bcrypt is an npm package that
-// has different binaries for differnet architectures.
+// has different binaries for different architectures.
 Npm.depends({
-  bcrypt: '5.0.0'
+  bcrypt: '5.0.0',
+  "extend": "2.0.2",
+  "spawn-sync": "1.0.15"
 });
 
 var npmPkg = determinePlatformNpmPackage();
@@ -35,7 +38,7 @@ if(npmPkg === null) {
   };
   // platform dependent pg-server-xxx package
   // if(npmPkg == "darwin_arm64"){
-    depend[npmPkg] = 'https://github.com/bslocombe/pg-server-14.2-osx-arm64.git#master';
+    // depend[npmPkg] = 'https://github.com/bslocombe/pg-server-14.2-osx-arm64.git#master';
   // }else{
   //   depend[npmPkg] = '9.4.4'
   // }
@@ -52,13 +55,12 @@ if(npmPkg === null) {
 
 Package.onUse(function(api) {
   api.versionsFrom('1.1.0.2');
+  // api.use('isobuild:compiler-plugin@1.0.0');
 });
 
 Package.onTest(function(api) {
   api.use('tinytest');
   api.use('bslocombe:pg-server');
   api.use('bslocombe:pg@1.0.4');
-
-  api.addAssets('test.pg.json', 'server');
   api.addFiles('pg-server-tests.js', 'server');
 });
