@@ -21,7 +21,7 @@ function determinePlatformNpmPackage() {
 // bcrypt is an npm package that
 // has different binaries for different architectures.
 Npm.depends({
-  bcrypt: '5.0.0',
+  bcrypt: '5.1.1',
   "extend": "2.0.2",
   "spawn-sync": "1.0.15"
 });
