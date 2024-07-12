@@ -1,7 +1,7 @@
 Package.describe({
   name: 'bslocombe:pg-server',
   // debugOnly: true,
-  version: '1.0.4',
+  version: '1.0.6',
   summary: 'Run PostgreSQL server inside your Meteor app',
   git: 'https://github.com/bslocombe/meteor-pg-server.git',
   documentation: 'README.md'
@@ -35,6 +35,7 @@ if(npmPkg === null) {
   var depend = {
     // For initialization queries
     'pg': '8.0.3',
+    'spawn-sync': '1.0.15'
   };
   // removing binary dependencies
   // platform dependent pg-server-xxx package
@@ -46,7 +47,7 @@ if(npmPkg === null) {
 
   Package.registerBuildPlugin({
     name: 'pgServer',
-    use: [ 'underscore@1.0.3' ],
+    use: [ 'underscore@1.0.3'],
     sources: [
       'plugin/pgServer.js'
     ],
@@ -55,7 +56,7 @@ if(npmPkg === null) {
 }
 
 Package.onUse(function(api) {
-  api.versionsFrom('1.1.0.2');
+  api.versionsFrom('2.5.1');
   // api.use('isobuild:compiler-plugin@1.0.0');
 });
 
